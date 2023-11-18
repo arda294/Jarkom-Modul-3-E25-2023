@@ -14,8 +14,6 @@ Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 2 Jarkom DNS dan W
     - [Script](#script)
     - [Hasil](#hasil)
   - [Soal 1](#soal-1)
-    - [Script](#script-1)
-    - [Hasil](#hasil-1)
   - [Soal 2](#soal-2)
     - [Script](#script-2)
     - [Hasil](#hasil-2)
