@@ -8,7 +8,7 @@ Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 3 Jarkom DHCP dan 
 
 # Daftar Isi
 - [Topologi](#topologi)
-- [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit)
+- [Grimoire Lengkap](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit)
 - [Konfigurasi Network Node](#konfigurasi-network-node)
 - [Soal-Soal](#soal-soal)
   - [Soal 0](#soal-0)
@@ -646,7 +646,13 @@ Apache benchmark dengan 1000 request dan 100 concurrency
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+Round Robin 1000 Requests 100 Concurrency
+
+![1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/deb1bfbe-3c1d-4cf0-889e-6e6058caaffa)
+
+![1 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/2a32934e-ec3d-4d6a-9880-9052ff7bc6a0)
+
+Diperoleh rata-rata 923.03 request per detik.
 
 ### Soal 8
 > Karena diminta untuk menuliskan grimoire, buatlah analisis hasil testing dengan 200 request dan 10 request/second masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
@@ -707,7 +713,29 @@ Apache benchmark 200 request dengan 10 concurrency
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+Round Robin 200 Requests 10 Concurrency
+
+![2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/6e7cd046-d781-45c1-afc7-e55b1c6cd870)
+
+![2 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/76e56057-03d0-4a93-9a1e-8a6a1e03ee3c)
+
+Least Connection 200 Request 10 Concurrency
+
+![3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/382a5f72-7470-4682-bad4-524bb0bf6b9c)
+
+![3 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/4c87b206-20be-4729-9edb-765fadbbfae5)
+
+IP Hash 200 Requests 10 Concurrency
+
+![4](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/71a68878-5ea0-4aa3-ab5e-06f1f709b1cb)
+
+![4 4](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/6a91b8c5-d36e-46da-9f4c-f2eabab63e41)
+
+Generic Hash 200 Request 10 Concurrency
+
+![5](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/ecdf732b-0f16-4c02-9694-b4a167fad2f9)
+
+![5 5](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/26507f18-a773-4faa-9054-898b90a366fc)
 
 ### Soal 9
 > Dengan menggunakan algoritma Round Robin, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 100 request dengan 10 request/second, kemudian tambahkan grafiknya pada grimoire.
