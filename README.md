@@ -646,7 +646,7 @@ Apache benchmark dengan 1000 request dan 100 concurrency
 
 #### Hasil
 
-Round Robin 1000 Requests 100 Concurrency
+- Round Robin 1000 Requests 100 Concurrency
 
 ![1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/deb1bfbe-3c1d-4cf0-889e-6e6058caaffa)
 
@@ -719,11 +719,15 @@ Apache benchmark 200 request dengan 10 concurrency
 
 ![2 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/76e56057-03d0-4a93-9a1e-8a6a1e03ee3c)
 
+Diperoleh rata-rata 2805.64 request per detik.
+
 - Least Connections 200 Request 10 Concurrency
 
 ![3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/382a5f72-7470-4682-bad4-524bb0bf6b9c)
 
 ![3 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/4c87b206-20be-4729-9edb-765fadbbfae5)
+
+Diperoleh rata-rata 2248.66 request per detik.
 
 - IP Hash 200 Requests 10 Concurrency
 
@@ -731,11 +735,15 @@ Apache benchmark 200 request dengan 10 concurrency
 
 ![4 4](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/6a91b8c5-d36e-46da-9f4c-f2eabab63e41)
 
+Diperoleh rata-rata 2262.44 request per detik.
+
 - Generic Hash 200 Request 10 Concurrency
 
 ![5](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/ecdf732b-0f16-4c02-9694-b4a167fad2f9)
 
 ![5 5](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/26507f18-a773-4faa-9054-898b90a366fc)
+
+Diperoleh rata-rata 2716.91 request per detik.
 
 ### Soal 9
 > Dengan menggunakan algoritma Round Robin, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 100 request dengan 10 request/second, kemudian tambahkan grafiknya pada grimoire.
@@ -751,7 +759,29 @@ Apache benchmark 100 request dengan 10 concurrency
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+- Round Robin 3 Worker 100 Requests 10 Concurrency
+
+![6](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/94dcaed2-452a-4fc2-b084-898de8923c9d)
+
+![6 6](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/9d663e8a-86f5-430b-8499-2a12310bcaaa)
+
+Diperoleh rata-rata 2550.17 request per detik.
+  
+- Round Robin 2 Worker 100 Requests 10 Concurrency
+
+  ![7](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/18982b87-14e4-4ba2-9e96-ac7f448d47bf)
+
+  ![7 7](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/d758c256-960a-45f9-822d-65fdd55de062)
+
+Diperoleh rata-rata 2586.92 request per detik.
+
+- Round Robin 1 Worker 100 Requests 10 Concurrency
+
+![8](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/f4167d6d-57f5-47bc-89d9-3b3c264ebc03)
+
+![8 8](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/879de5fd-a6cf-4a9f-9c7d-74f884f45092)
+
+Diperoleh rata-rata 2202.11 request per detik.
 
 ### Soal 10
 > Selanjutnya coba tambahkan konfigurasi autentikasi di LB dengan dengan kombinasi username: “netics” dan password: “ajkyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/rahasisakita/
