@@ -72,6 +72,7 @@ Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 2 Jarkom DNS dan W
     - [Result](#hasil-20)
 
 ## Topologi
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/94e43536-77ce-47bc-9180-5041793d6c83)
 
 ## Konfigurasi Network Node
 - Aura
