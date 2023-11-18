@@ -1447,11 +1447,11 @@ Diperoleh rata-rata 101.43 request per detik.
 
 - Percobaan 3
 
-![19 3 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/c78f8295-ca08-4969-8255-5b71325d542b)
+![19 3 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/55c01350-67e1-4a07-8f39-04d8891b3351)
 
-![19 3 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/4820c301-1da6-4613-aeab-e2a4a9399ce2)
+![19 3 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/09af6cea-b053-4783-9d4f-69ff3249d6b8)
 
-![19 3 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/19eb490f-a775-4ec6-add0-a0e15d5139b1)
+![19 3 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/520c40bb-a8d4-4843-99d7-38e6c4a0fd85)
 
 Diperoleh rata-rata 102.34 request per detik.
 
