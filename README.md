@@ -14,6 +14,8 @@ Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 2 Jarkom DNS dan W
     - [Script](#script)
     - [Hasil](#hasil)
   - [Soal 1](#soal-1)
+    - [Script](#script-1)
+    - [Hasil](#hasil-1)
   - [Soal 2](#soal-2)
     - [Script](#script-2)
     - [Hasil](#hasil-2)
@@ -338,14 +340,20 @@ Dengan script ini akan setup semua dns zone yang diperlukan
 #### Hasil
 
 Ping ``riegel.canyon.e25.com``
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/dd984748-97c2-4868-9f0a-5bd71e97714f)
 
 Ping ``granz.channel.e25.com``
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/01c0bdcc-a85c-431b-ae8f-24baad0039df)
 
 ### Soal 1
 > Lakukan konfigurasi sesuai dengan peta yang sudah diberikan.
 
+#### Script
+Sudah dijawab pada [Konfigurasi Network Node](#konfigurasi-network-node)
+
+#### Hasil
 Sudah dijawab pada [Konfigurasi Network Node](#konfigurasi-network-node)
 
 ### Soal 2
@@ -388,6 +396,7 @@ service isc-dhcp-relay restart
 #### Hasil
 
 Revolte mendapatkan IP dari Himmel
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/1e200946-cb45-495a-87e4-c65a02fda541)
 
 ### Soal 3
@@ -409,6 +418,7 @@ subnet 10.49.4.0 netmask 255.255.255.0 {
 #### Hasil
 
 Stark mendapatkan IP dari Himmel
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/60788b68-22e9-4ad5-ac54-dae435ebaa61)
 
 ### Soal 4
@@ -453,6 +463,7 @@ Ditambahkan option domain-name-servers, sehingga akan otomatis mengisi resolv.co
 #### Hasil
 
 Stark ping ``google.com``
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/8ef54e1f-292b-4dad-947b-139a710a22a7)
 
 
@@ -494,42 +505,264 @@ Kedua subnet tersebut akan diberi ``max-lease-time`` 5760 detik.
 #### Hasil
 
 Ritcher mendapatkan IP dari Himmel
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/c6988381-e7cc-4a61-bf80-8ed37d0185d0)
 
 Revolte mendapatkan IP dari Himmel
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/fe2921ef-e66e-4edc-b286-11c4f61b9cf5)
 
-
-
 ### Soal 6
+> Pada masing-masing worker PHP, lakukan konfigurasi virtual host untuk website berikut dengan menggunakan php 7.3
 
-
+Untuk ini perlu setup Nginx pada setiap worker node.
 
 #### Script
 
+Lawine
+```
+apt install nginx php7.3 php7.3-fpm wget zip htop -y
+
+echo '
+server {
+    listen 80;
+    server_name granz.channel.e25.com www.granz.channel.e25.com;
+
+    location / {
+        proxy_set_header Host $host;
+	proxy_pass http://10.49.2.2; #IP Eisen
+    }
+}' > /etc/nginx/sites-available/lb-proxy
+
+ln -s /etc/nginx/sites-available/lb-proxy /etc/nginx/sites-enabled/lb-proxy
+
+wget -O '/var/www/jarkom.zip' 'https://drive.google.com/uc?id=1ViSkRq7SmwZgdK64eRbr5Fm1EGCTPrU1&export=download'
+unzip -o /var/www/jarkom.zip -d /var/www/
+rm /var/www/jarkom.zip
+
+echo '
+ server {
+
+ 	listen 8000;
+
+ 	root /var/www/modul-3;
+
+ 	index index.php index.html index.htm;
+ 	server_name _;
+
+ 	location / {
+ 			try_files $uri $uri/ /index.php?$query_string;
+ 	}
+
+ 	# pass PHP scripts to FastCGI server
+ 	location ~ \.php$ {
+ 	include snippets/fastcgi-php.conf;
+ 	fastcgi_pass unix:/var/run/php/php7.3-fpm.sock;
+ 	}
+
+    location ~ /\.ht {
+ 			deny all;
+ 	}
+
+ 	error_log /var/log/nginx/jarkom_error.log;
+ 	access_log /var/log/nginx/jarkom_access.log;
+ }
+' > /etc/nginx/sites-available/modul-3
+
+ln -s /etc/nginx/sites-available/modul-3 /etc/nginx/sites-enabled/modul-3
+
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+service php7.3-fpm stop
+service php7.3-fpm start
+```
+
+Lawine akan melakukan proxy pass ke Eisen yang akan Load Balance antara worker-worker PHP (Termasuk lawine)
+
+Eisen
+```
+apt install nginx -y
+
+echo ' # Default menggunakan Round Robin
+upstream granz  {
+ 	server 10.49.3.1:8000; #IP Lawine
+ 	server 10.49.3.2:8000; #IP Linie
+    	server 10.49.3.3:8000; #IP Lugner
+ }
+
+ server {
+ 	listen 80;
+ 	server_name granz.channel.e25.com www.granz.channel.e25.com;
+
+ 	location / {
+        proxy_pass http://granz;
+ 	}
+ }' > /etc/nginx/sites-available/lb-proxy
+
+ln -s /etc/nginx/sites-available/lb-proxy /etc/nginx/sites-enabled/lb-proxy
+
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+
 #### Hasil
+
+Lynx ``granz.channel.e25.com`` mendapatkan Lawine
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/1872cb13-47af-4f15-82e2-a428e6666c3a)
+
+Request berikutnya ditangani Linie
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/50d782a4-028c-4965-8f6f-82dffa4062ee)
+
+Request berikutnya ditangani Lugner
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/95a16b14-0446-4205-98e9-348417258e73)
 
 ### Soal 7
 
+> Kepala suku dari Bredt Region memberikan resource server sebagai berikut:
+> 
+> Lawine, 4GB, 2vCPU, dan 80 GB SSD.
+> Linie, 2GB, 2vCPU, dan 50 GB SSD.
+> Lugner 1GB, 1vCPU, dan 25 GB SSD.
+> 
+> aturlah agar Eisen dapat bekerja dengan maksimal, lalu lakukan testing dengan 1000 request dan 100 request/second
+
+Akan dilakukan apache benchmark
+
 #### Script
 
+```
+ab -n 1000 -c 100 http://granz.channel.e25.com/
+```
+
+Apache benchmark dengan 1000 request dan 100 concurrency
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 8
+> Karena diminta untuk menuliskan grimoire, buatlah analisis hasil testing dengan 200 request dan 10 request/second masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
+> 
+> a. Nama Algoritma Load Balancer
+> b. Report hasil testing pada Apache Benchmark
+> c. Grafik request per second untuk masing masing algoritma. 
+> d. Analisis
+
+Akan testing untuk berbagai algoritma load balancer pada nginx
 
 #### Script
+
+Round Robin akan digunakan secara default nginx
+
+- Least Connections
+
+```
+upstream granz  {
+	least_conn;
+ 	server 10.49.3.1:8000; #IP Lawine
+ 	server 10.49.3.2:8000; #IP Linie
+    	server 10.49.3.3:8000; #IP Lugner
+}
+```
+
+- IP Hash
+
+```
+upstream granz  {
+	ip_hash;
+ 	server 10.49.3.1:8000; #IP Lawine
+ 	server 10.49.3.2:8000; #IP Linie
+    	server 10.49.3.3:8000; #IP Lugner
+}
+```
+
+- Generic Hash
+
+```
+upstream granz  {
+	hash $request_uri consistent;
+ 	server 10.49.3.1:8000; #IP Lawine
+ 	server 10.49.3.2:8000; #IP Linie
+    	server 10.49.3.3:8000; #IP Lugner
+}
+```
+	
+Testing
+
+```
+ab -n 200 -c 10 http://granz.channel.e25.com/
+```
+Apache benchmark 200 request dengan 10 concurrency
+
+#### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 9
+> Dengan menggunakan algoritma Round Robin, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 100 request dengan 10 request/second, kemudian tambahkan grafiknya pada grimoire.
 
+Untuk melakukan ini, hanya perlu mematikan service nginx pada node yang ingin dimatikan (Kecuali lawine karena node ini yang proxy_pass menuju load balancer dan yang di point oleh DNS server) untuk mengurangi jumlah worker
 #### Script
 
+```
+ab -n 100 -c 10 http://granz.channel.e25.com/
+```
+
+Apache benchmark 100 request dengan 10 concurrency
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 10
+> Selanjutnya coba tambahkan konfigurasi autentikasi di LB dengan dengan kombinasi username: “netics” dan password: “ajkyyy”, dengan yyy merupakan kode kelompok. Terakhir simpan file “htpasswd” nya di /etc/nginx/rahasisakita/
+
+Untuk ini perlu menyiapkan script yang berisi informasi untuk Auth Basic
 
 #### Script
 
+Informasi auth basic digenerate menggunakan WSL
+
+Menjalankan command ``htpasswd -c .htpasswd netics`` dan memasukkan pasword yaitu ajke25
+
+Hasilnya yaitu
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/6abbb777-68bc-404d-8530-b55ab38da2fc)
+
+Kemudian pada Eisen
+```
+mkdir /etc/nginx/rahasiakita
+echo 'netics:$apr1$LAhCeYuU$wvZpDE51qjEJLOug.bc4v/' > /etc/nginx/rahasiakita/.htpasswd
+
+ server {
+ 	listen 80;
+ 	server_name granz.channel.e25.com www.granz.channel.e25.com;
+
+	auth_basic "Authorization";
+	auth_basic_user_file /etc/nginx/rahasiakita/.htpasswd;
+
+ 	location / {
+        proxy_pass http://granz;
+ 	}
+ }
+```
+
 #### Hasil
+
+Mencoba mengakses ``granz.channel.e25.com``
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/460a7297-bd45-4a98-8a0e-17dfccf941f0)
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/10c67946-7a6e-4d70-b59f-23c4b880ce01)
+
+Setelah memasukkan password
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/e042ec99-07dd-4d13-8a6c-496e8df50111)
 
 ### Soal 11
 
