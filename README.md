@@ -8,6 +8,7 @@ Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 3 Jarkom DHCP dan 
 
 # Daftar Isi
 - [Topologi](#topologi)
+- [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit)
 - [Konfigurasi Network Node](#konfigurasi-network-node)
 - [Soal-Soal](#soal-soal)
   - [Soal 0](#soal-0)
