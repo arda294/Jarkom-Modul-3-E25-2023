@@ -946,11 +946,12 @@ mysql < ~/script.sql
 
 #### Hasil
 
-List database pada Denken
+- List database pada Denken
 
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/d805aed6-5f35-458f-97b7-0e0283793292)
 
-List user database pada Denken
+- List user database pada Denken
+
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/4bc9d1a6-87f3-464f-bd4d-7f8f79ef3f0d)
 
 ### Soal 14
@@ -1289,12 +1290,18 @@ ab -n 100 -c 10 -p payload.json -T 'application/json' -H 'Accept: application/js
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+- Endpoint Register
+
+![regis](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/a2dbdd86-d80c-42c9-b8db-13c54c9fed4b)
+
+![regis1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/6284604b-efb2-450b-8c33-85e9eddb55ac)
+
+Diperoleh rata-rata 220.45 request per detik.
 
 ### Soal 16
 > Riegel Channel memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire
 
-> POST /auth/register
+> POST /auth/login
 
 Untuk testing ini dilakukan hanya pada satu worker
 
@@ -1312,7 +1319,13 @@ ab -n 100 -c 10 -p payload.json -T 'application/json' -H 'Accept: application/js
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+- Endpoint Login
+
+![logn](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/fda51f7a-b7b0-42b4-888a-4846641337e6)
+
+![login1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/98223011-0aa2-44d2-9e32-0861794b9214)
+
+Diperoleh rata-rata 76.26 request per detik.
 
 ### Soal 17
 > Riegel Channel memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire
@@ -1338,7 +1351,13 @@ ab -n 100 -c 10 -T 'application/json' -H 'Accept: application/json' -H 'Authoriz
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+- Endpoint Me
+
+![me](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/aa16a103-81af-47a1-b05f-db399c4e9d76)
+
+![me1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/39b09030-4004-44b2-a95e-44353c092de4)
+
+Diperoleh rata-rata 170.47 request per detik.
 
 ### Soal 18
 > Untuk memastikan ketiganya bekerja sama secara adil untuk mengatur Riegel Channel maka implementasikan Proxy Bind pada Eisen untuk mengaitkan IP dari Frieren, Flamme, dan Fern.
