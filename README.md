@@ -765,16 +765,88 @@ Setelah memasukkan password
 ![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/e042ec99-07dd-4d13-8a6c-496e8df50111)
 
 ### Soal 11
+> Lalu buat untuk setiap request yang mengandung /its akan di proxy passing menuju halaman https://www.its.ac.id.
+
+Akan ditambahkan kondisi dimana lokasi /its akan proxy_pass menuju ``its.ac.id``
 
 #### Script
 
+Pada Lawine
+```
+server {
+    listen 80;
+    server_name granz.channel.e25.com www.granz.channel.e25.com;
+
+    location /its {
+        proxy_pass https://its.ac.id;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+	proxy_pass http://10.49.2.2; #IP Eisen
+    }
+}
+```
+
 #### Hasil
+
+Mencoba akses ``granz.channel.e25.com/its``
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/43feccb9-245c-4534-ba99-8c3a07c88f38)
+
 
 ### Soal 12
+> Selanjutnya LB ini hanya boleh diakses oleh client dengan IP [Prefix IP].3.69, [Prefix IP].3.70, [Prefix IP].4.167, dan [Prefix IP].4.168.
+
+Akan dilakukan filter IP pada Lawine
 
 #### Script
 
+```
+geo $allowed {
+    default     0;
+    10.49.3.69  1;
+    10.49.3.70  1;
+    10.49.4.167 1;
+    10.49.4.168 1;
+}
+
+
+server {
+    listen 80;
+    server_name granz.channel.e25.com www.granz.channel.e25.com;
+
+    
+
+    location /its {
+        proxy_pass https://its.ac.id;
+    }
+
+    location / {
+        proxy_set_header Host $host;
+        if ($allowed) {
+            proxy_pass http://10.49.2.2; #IP Eisen
+        }
+        proxy_pass http://127.0.0.1:8000;
+    }
+}
+```
+
+menggunakan modul geo nginx, bisa melakukan filter IP. IP yang eligible akan diarahkan menuju Load Balancer sedangkan yang tidak eligible akan proxy_pass ke localhost
+
 #### Hasil
+
+IP eligible
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/28b2a4ae-04f9-48cc-903a-214d617a9832)
+
+Akan melalui load balancer, sehingga akan masuk ke worker-worker berbeda sesuai algoritma load balancer
+
+IP tidak eligible
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/dd4c7ac1-2ad6-4c4d-aebd-126eff5f6b1d)
+
+Hanya akan masuk ke Lawine
 
 ### Soal 13
 
