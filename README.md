@@ -1425,7 +1425,35 @@ Untuk tiap percobaan dilakukan inkremen pada ``pm.max_children``, ``pm.start_ser
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+- Percobaan 1
+
+![19 1 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/ff2b889b-f221-4ef6-a7b0-df776134d0d5)
+
+![19 1 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/f69ae5a0-cbcd-4470-afc6-80cdc76a949c)
+
+![19 1 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/73e5d83f-b01c-4796-8e8d-8acccaec2def)
+
+Diperoleh rata-rata 92.62 request per detik.
+
+- Percobaan 2
+
+![19 2 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/1737d934-4ba0-4545-b050-0b489f76e844)
+
+![19 2 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/4060d7ad-5a02-4a9a-927b-fbadb16a076e)
+
+![19 2 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/7bb1509d-9840-40b8-91c0-30c57e128ba8)
+
+Diperoleh rata-rata 101.43 request per detik.
+
+- Percobaan 3
+
+![19 3 3](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/c78f8295-ca08-4969-8255-5b71325d542b)
+
+![19 3 2](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/4820c301-1da6-4613-aeab-e2a4a9399ce2)
+
+![19 3 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/19eb490f-a775-4ec6-add0-a0e15d5139b1)
+
+Diperoleh rata-rata 102.34 request per detik.
 
 ### Soal 20
 > Nampaknya hanya menggunakan PHP-FPM tidak cukup untuk meningkatkan performa dari worker maka implementasikan Least-Conn pada Eisen. Untuk testing kinerja dari worker tersebut dilakukan sebanyak 100 request dengan 10 request/second
@@ -1445,10 +1473,15 @@ upstream riegel  {
 
 #### Hasil
 
-Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
+- Hasil Testing Algoritma Least Connections Worker Laravel
 
+![201](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/a57cda03-f64d-4d29-9c53-4fc8d9c3f5c4)
 
+![202](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/9f31daec-7717-4bf2-8880-2f552f47f8f2)
 
+Diperoleh rata-rata 91.40 request per detik.
+
+Hasil yang diperoleh mirip seperti hasil testing pada PHP Worker dimana Menggunakan Algoritma Round Robin memiliki waktu proses request yang lebih kecil dibandingkan menggunakan Algoritma Least Connections.
 
 
 
