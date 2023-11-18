@@ -624,11 +624,13 @@ Request berikutnya ditangani Lugner
 ### Soal 7
 
 > Kepala suku dari Bredt Region memberikan resource server sebagai berikut:
-> 
+
 > Lawine, 4GB, 2vCPU, dan 80 GB SSD.
+
 > Linie, 2GB, 2vCPU, dan 50 GB SSD.
+
 > Lugner 1GB, 1vCPU, dan 25 GB SSD.
-> 
+
 > aturlah agar Eisen dapat bekerja dengan maksimal, lalu lakukan testing dengan 1000 request dan 100 request/second
 
 Akan dilakukan apache benchmark
@@ -647,10 +649,13 @@ Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh
 
 ### Soal 8
 > Karena diminta untuk menuliskan grimoire, buatlah analisis hasil testing dengan 200 request dan 10 request/second masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut:
-> 
+
 > a. Nama Algoritma Load Balancer
+
 > b. Report hasil testing pada Apache Benchmark
-> c. Grafik request per second untuk masing masing algoritma. 
+
+> c. Grafik request per second untuk masing masing algoritma.
+
 > d. Analisis
 
 Akan testing untuk berbagai algoritma load balancer pada nginx
@@ -849,52 +854,520 @@ IP tidak eligible
 Hanya akan masuk ke Lawine
 
 ### Soal 13
+> Semua data yang diperlukan, diatur pada Denken dan harus dapat diakses oleh Frieren, Flamme, dan Fern.
+
+Akan setup database pada Denken
 
 #### Script
 
+```
+apt-get install mariadb-server -y
+
+echo '
+[client-server]
+
+[mysqld]
+skip-networking=0
+skip-bind-address
+' > /etc/mysql/my.cnf
+
+service mysql restart
+
+echo "
+CREATE USER IF NOT EXISTS 'kelompoke25'@'%' IDENTIFIED BY 'passworde25';
+CREATE USER IF NOT EXISTS 'kelompoke25'@'localhost' IDENTIFIED BY 'passworde25';
+CREATE DATABASE IF NOT EXISTS dbkelompoke25;
+GRANT ALL PRIVILEGES ON *.* TO 'kelompoke25'@'%';
+GRANT ALL PRIVILEGES ON *.* TO 'kelompoke25'@'localhost';
+FLUSH PRIVILEGES;
+" > ~/script.sql
+
+mysql < ~/script.sql
+```
+
 #### Hasil
+
+List database pada Denken
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/d805aed6-5f35-458f-97b7-0e0283793292)
+
+List user database pada Denken
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/4bc9d1a6-87f3-464f-bd4d-7f8f79ef3f0d)
 
 ### Soal 14
+> Frieren, Flamme, dan Fern memiliki Riegel Channel sesuai dengan quest guide berikut. Jangan lupa melakukan instalasi PHP8.0 dan Composer
+
+Akan setup PHP8.0 dan juga Laravel
 
 #### Script
 
+Pada Freiren (Migrate dan juga proxy pass menuju Load Balancer)
+```
+rm /etc/apt/sources.list.d/php.list
+apt-get update
+apt install nginx php8.0 php8.0-fpm wget zip htop -y
+apt-get install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+
+curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
+sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+
+apt-get update
+
+apt-get install php8.0-mbstring php8.0-xml php8.0-cli php8.0-common php8.0-intl php8.0-opcache php8.0-readline php8.0-mysql php8.0-fpm php8.0-curl -y
+
+wget https://getcomposer.org/download/2.0.13/composer.phar
+chmod +x composer.phar
+mv composer.phar /usr/bin/composer
+
+echo ' # Default menggunakan Round Robin
+ server {
+ 	listen 80;
+ 	server_name riegel.canyon.e25.com www.riegel.canyon.e25.com;
+
+ 	location / {
+ 	    proxy_pass http://10.49.2.2; #IP Eisen
+        proxy_set_header HOST $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+ 	}
+ }' > /etc/nginx/sites-available/lb-proxy
+
+ln -s /etc/nginx/sites-available/lb-proxy /etc/nginx/sites-enabled/lb-proxy
+
+wget -O '/var/www/jarkom.zip' 'https://github.com/martuafernando/laravel-praktikum-jarkom/archive/refs/heads/main.zip'
+unzip -o /var/www/jarkom.zip -d /var/www/
+rm /var/www/jarkom.zip
+
+echo '
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=10.49.2.1
+DB_PORT=3306
+DB_DATABASE=dbkelompoke25
+DB_USERNAME=kelompoke25
+DB_PASSWORD=passworde25
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+MEMCACHED_HOST=127.0.0.1
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+
+VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+VITE_PUSHER_HOST="${PUSHER_HOST}"
+VITE_PUSHER_PORT="${PUSHER_PORT}"
+VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
+VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+JWT_SECRET=o9HWEIfemIeWt5bn8UuiMTrLQyeNsjmCRNDW7X8gRqkb3CJEEIshDjtCs2abcVcA
+' > /var/www/laravel-praktikum-jarkom-main/.env
+
+cd /var/www/laravel-praktikum-jarkom-main
+
+composer update
+php artisan migrate:fresh
+php artisan db:seed --class=AiringsTableSeeder
+php artisan key:generate
+
+cd ~
+
+echo '
+ server {
+
+ 	listen 8000;
+
+ 	root /var/www/laravel-praktikum-jarkom-main/public;
+
+ 	index index.php index.html index.htm;
+ 	server_name _;
+
+ 	location / {
+ 			try_files $uri $uri/ /index.php?$query_string;
+ 	}
+
+ 	# pass PHP scripts to FastCGI server
+ 	location ~ \.php$ {
+ 	include snippets/fastcgi-php.conf;
+ 	fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+ 	}
+
+    location ~ /\.ht {
+ 			deny all;
+ 	}
+
+ 	error_log /var/log/nginx/jarkom_error.log;
+ 	access_log /var/log/nginx/jarkom_access.log;
+ }
+' > /etc/nginx/sites-available/laravel-praktikum-jarkom-main
+
+ln -s /etc/nginx/sites-available/laravel-praktikum-jarkom-main /etc/nginx/sites-enabled/laravel-praktikum-jarkom-main
+
+chown -R www-data.www-data /var/www/laravel-praktikum-jarkom-main/storage
+
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+service php8.0-fpm stop
+service php8.0-fpm start
+```
+
+Flamme dan Fern
+```
+rm /etc/apt/sources.list.d/php.list
+apt-get update
+apt install nginx php8.0 php8.0-fpm wget zip htop -y
+apt-get install -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg2
+
+curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
+sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+
+apt-get update
+
+apt-get install php8.0-mbstring php8.0-xml php8.0-cli php8.0-common php8.0-intl php8.0-opcache php8.0-readline php8.0-mysql php8.0-fpm php8.0-curl -y
+
+wget https://getcomposer.org/download/2.0.13/composer.phar
+chmod +x composer.phar
+mv composer.phar /usr/bin/composer
+
+wget -O '/var/www/jarkom.zip' 'https://github.com/martuafernando/laravel-praktikum-jarkom/archive/refs/heads/main.zip'
+unzip -o /var/www/jarkom.zip -d /var/www/
+rm /var/www/jarkom.zip
+
+echo '
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
+
+DB_CONNECTION=mysql
+DB_HOST=10.49.2.1
+DB_PORT=3306
+DB_DATABASE=dbkelompoke25
+DB_USERNAME=kelompoke25
+DB_PASSWORD=passworde25
+
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+
+MEMCACHED_HOST=127.0.0.1
+
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+
+VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+VITE_PUSHER_HOST="${PUSHER_HOST}"
+VITE_PUSHER_PORT="${PUSHER_PORT}"
+VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
+VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+JWT_SECRET=o9HWEIfemIeWt5bn8UuiMTrLQyeNsjmCRNDW7X8gRqkb3CJEEIshDjtCs2abcVcA
+' > /var/www/laravel-praktikum-jarkom-main/.env
+
+cd /var/www/laravel-praktikum-jarkom-main
+
+composer update
+php artisan key:generate
+
+cd ~
+
+echo '
+ server {
+
+ 	listen 8000;
+
+ 	root /var/www/laravel-praktikum-jarkom-main/public;
+
+ 	index index.php index.html index.htm;
+ 	server_name _;
+
+ 	location / {
+ 			try_files $uri $uri/ /index.php?$query_string;
+ 	}
+
+ 	# pass PHP scripts to FastCGI server
+ 	location ~ \.php$ {
+ 	include snippets/fastcgi-php.conf;
+ 	fastcgi_pass unix:/var/run/php/php8.0-fpm.sock;
+ 	}
+
+    location ~ /\.ht {
+ 			deny all;
+ 	}
+
+ 	error_log /var/log/nginx/jarkom_error.log;
+ 	access_log /var/log/nginx/jarkom_access.log;
+ }
+' > /etc/nginx/sites-available/laravel-praktikum-jarkom-main
+
+ln -s /etc/nginx/sites-available/laravel-praktikum-jarkom-main /etc/nginx/sites-enabled/laravel-praktikum-jarkom-main
+
+chown -R www-data.www-data /var/www/laravel-praktikum-jarkom-main/storage
+
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+service php8.0-fpm stop
+service php8.0-fpm start
+```
+
+Pada Eisen
+```
+upstream riegel  {
+ 	server 10.49.4.1:8000; #IP Frieren
+ 	server 10.49.4.2:8000; #IP Flamme
+    	server 10.49.4.3:8000; #IP Fern
+ }
+
+server {
+ 	listen 80;
+ 	server_name riegel.canyon.e25.com www.riegel.canyon.e25.com;
+
+ 	location / {
+        proxy_pass http://riegel;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+	}
+}
+```
+
 #### Hasil
+
+Mencoba mengaskses ``riegel.canyon.e25.com``
+
+![image](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/6b29ba2b-05f8-44a8-b548-9bc35230f0a9)
+
 
 ### Soal 15
+> Riegel Channel memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire
+
+> POST /auth/register  
+
+Untuk testing ini dilakukan hanya pada satu worker
 
 #### Script
 
+payload.json
+```
+{"username": "test123", "password": "test123"}
+```
+
+Apache Benchmark
+```
+ab -n 100 -c 10 -p payload.json -T 'application/json' -H 'Accept: application/json' riegel.canyon.e25.com/api/auth/register/
+```
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 16
+> Riegel Channel memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire
+
+> POST /auth/register
+
+Untuk testing ini dilakukan hanya pada satu worker
 
 #### Script
 
+payload.json
+```
+{"username": "test123", "password": "test123"}
+```
+
+Apache Benchmark
+```
+ab -n 100 -c 10 -p payload.json -T 'application/json' -H 'Accept: application/json' riegel.canyon.e25.com/api/auth/login/
+```
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 17
+> Riegel Channel memiliki beberapa endpoint yang harus ditesting sebanyak 100 request dengan 10 request/second. Tambahkan response dan hasil testing pada grimoire
+
+> GET /me
+
+Untuk testing ini dilakukan hanya pada satu worker
 
 #### Script
 
+Pertama perlu mendapatkan token yang valid pada endpoint login
+
+curl -X POST http://riegel.canyon.e25.com/api/auth/login -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"username": "test123", "password": "test123"}' | jq
+
+Contoh token yang didapatkan
+
+![Login sample response](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/114855785/b7626286-d70d-4a49-8762-88d7a9cc312a)
+
+Apache Benchmark menggunakan token yang didapatkan
+```
+ab -n 100 -c 10 -T 'application/json' -H 'Accept: application/json' -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vcmllZ2VsL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNzAwMDcxMTc1LCJleHAiOjE3MDAwNzQ3NzUsIm5iZiI6MTcwMDA3MTE3NSwianRpIjoiNXhudjF1MzN6NncxRUIyRyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.n8Wef9ma2C1TtzvdeCoHk_0WOlkS0_GVPOXKuwEhfW0' riegel.canyon.e25.com/api/me/
+```
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 18
+> Untuk memastikan ketiganya bekerja sama secara adil untuk mengatur Riegel Channel maka implementasikan Proxy Bind pada Eisen untuk mengaitkan IP dari Frieren, Flamme, dan Fern.
+
+Akan implementasi proxy_bind yang dilakukan secara otomatis oleh nginx ketika melakukan proxy_pass
 
 #### Script
 
+```
+upstream riegel  {
+ 	server 10.49.4.1:8000; #IP Frieren
+ 	server 10.49.4.2:8000; #IP Flamme
+    	server 10.49.4.3:8000; #IP Fern
+ }
+```
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 19
+> Untuk meningkatkan performa dari Worker, coba implementasikan PHP-FPM pada Frieren, Flamme, dan Fern. Untuk testing kinerja naikkan 
+
+> - pm.max_children
+
+> - pm.start_servers
+
+> - pm.min_spare_servers
+
+> - pm.max_spare_servers
+
+> sebanyak tiga percobaan dan lakukan testing sebanyak 100 request dengan 10 request/second kemudian berikan hasil analisisnya pada Grimoire.
+
+Testing dilakukan menggunakan semua node
 
 #### Script
 
+Pada tiap node
+```
+echo '
+[www]
+
+user = www-data
+group = www-data
+
+listen = /run/php/php8.0-fpm.sock
+
+listen.owner = www-data
+listen.group = www-data
+
+
+
+pm = dynamic
+pm.max_children = 25
+pm.start_servers = 7
+pm.min_spare_servers = 6
+pm.max_spare_servers = 10
+' > /etc/php/8.0/fpm/pool.d/www.conf
+
+service php8.0-fpm stop
+service php8.0-fpm start
+```
+
+Untuk tiap percobaan dilakukan inkremen pada ``pm.max_children``, ``pm.start_servers``, ``pm.min_spare_servers``, dan ``pm.max_spare_servers``.
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 ### Soal 20
+> Nampaknya hanya menggunakan PHP-FPM tidak cukup untuk meningkatkan performa dari worker maka implementasikan Least-Conn pada Eisen. Untuk testing kinerja dari worker tersebut dilakukan sebanyak 100 request dengan 10 request/second
+
+Hanya perlu mengubah algoritma load balancing pada Eisen
 
 #### Script
 
+```
+upstream riegel  {
+    least_conn;
+ 	server 10.49.4.1:8000; #IP Frieren
+ 	server 10.49.4.2:8000; #IP Flamme
+    	server 10.49.4.3:8000; #IP Fern
+ }
+```
+
 #### Hasil
+
+Dapat dilihat pada [Grimoire](https://docs.google.com/document/d/1uM2Yoy0r-yegrh4dzcmYMVLXx_rfpr16OTtRcoPNIQs/edit) kami
 
 
 
