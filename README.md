@@ -1,5 +1,5 @@
-# Jarkom-Modul-2-E25-2023
-Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 2 Jarkom DNS dan Webserver
+# Jarkom-Modul-3-E25-2023
+Berikut adalah laporan resmi untuk pengerjaan Praktikum Modul 3 Jarkom DHCP dan Reverse Proxy
 ## Anggota Kelompok E25
 | Nama | NRP |
 | --- | --- |
