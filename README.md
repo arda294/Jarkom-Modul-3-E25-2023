@@ -1425,6 +1425,8 @@ Untuk tiap percobaan dilakukan inkremen pada ``pm.max_children``, ``pm.start_ser
 
 #### Hasil
 
+- Hasil Testing Config PHP FPM Worker Laravel (Load Balanced) Endpoint Login
+
 - Percobaan 1
 
 ![19 1 1](https://github.com/arda294/Jarkom-Modul-3-E25-2023/assets/108173647/ff2b889b-f221-4ef6-a7b0-df776134d0d5)
